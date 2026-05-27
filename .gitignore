@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Skill iteration workspace (created by skill-creator, not part of the skill itself)
+*-workspace/
+
+# Local-only test outputs
+/tmp/
+/scratch/

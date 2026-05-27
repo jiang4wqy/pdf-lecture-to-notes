@@ -115,9 +115,13 @@ Skill 需要本机有：
 | Python ≥ 3.8 | 跑 extract_pdf_pages.py | `python --version` |
 | PyMuPDF (fitz) | PDF 渲染为图片 | `python -c "import fitz; print(fitz.__doc__[:50])"` |
 
-如果 PyMuPDF 没装：
+如果 PyMuPDF 没装，二选一：
 
 ```powershell
+# 推荐：用本仓库附带的 requirements.txt（之后加新依赖只改一处）
+pip install -r requirements.txt
+
+# 或直接装单个包
 pip install pymupdf
 ```
 
@@ -170,27 +174,44 @@ Claude 会用 `skill-creator` 工作流跑下一轮 with-skill vs without-skill 
 
 ## 七、如何分享给别人
 
-Skill 是单文件夹结构，可以直接复制。
+这个 skill 已经发布在 GitHub：**https://github.com/jiang4wqy/pdf-lecture-to-obsidian**
 
-### 方法 A — 打包为 `.skill` 文件
-```
-python C:\Users\lenovo\.claude\plugins\cache\claude-plugins-official\skill-creator\unknown\skills\skill-creator\scripts\package_skill.py C:\Users\lenovo\.claude\skills\pdf-lecture-to-obsidian
-```
-得到 `pdf-lecture-to-obsidian.skill` 文件，发给同学。对方安装即可。
+最简单的方式是把 README 链接发给对方，里面有现成的安装命令。下面是三种分发方式的对比：
 
-### 方法 B — 直接拷贝整个文件夹
-对方把整个 `pdf-lecture-to-obsidian/` 复制到自己的 `~/.claude/skills/` 下即可。
+### 方法 A — 直接给对方仓库链接（推荐）
 
-### 方法 C — 推到 git
+发链接 → 对方执行：
+```powershell
+# Windows
+cd $env:USERPROFILE\.claude\skills
+git clone https://github.com/jiang4wqy/pdf-lecture-to-obsidian.git
+pip install -r pdf-lecture-to-obsidian\requirements.txt
 ```
-cd C:\Users\lenovo\.claude\skills\pdf-lecture-to-obsidian
-git init
+```bash
+# macOS / Linux
+cd ~/.claude/skills
+git clone https://github.com/jiang4wqy/pdf-lecture-to-obsidian.git
+pip install -r pdf-lecture-to-obsidian/requirements.txt
+```
+优点：以后你 `git push` 更新，对方 `git pull` 就能同步。
+
+### 方法 B — 打包成 zip 直接发
+
+适合对方不会用 git 的情况。压缩整个 `pdf-lecture-to-obsidian/` 文件夹，对方解压到自己的 `~/.claude/skills/` 即可。注意提醒对方还要 `pip install pymupdf`。
+
+### 方法 C — 打包成 `.skill` 文件（最正式）
+
+用 skill-creator 提供的打包脚本，会生成单个 `.skill` 文件供官方 plugin 系统安装。日常分享场景下用方法 A 就够了。
+
+### 更新自己仓库的流程
+
+在本地改完后：
+```powershell
+cd $env:USERPROFILE\.claude\skills\pdf-lecture-to-obsidian
 git add .
-git commit -m "Initial skill"
-git remote add origin <your-repo>
+git commit -m "describe your change"
 git push
 ```
-别人 `git clone` 到 `~/.claude/skills/` 下即可。
 
 ---
 
@@ -198,8 +219,12 @@ git push
 
 ```
 pdf-lecture-to-obsidian/
-├── SKILL.md                              ← 主文件（800 行，描述工作流）
-├── USAGE.md                              ← 本文件
+├── SKILL.md                              ← skill 主文件，Claude 自动读取（描述 + 工作流）
+├── USAGE.md                              ← 本文件（给最终用户看的使用指南）
+├── README.md                             ← GitHub 主页展示，含安装步骤
+├── LICENSE                               ← MIT 许可证
+├── requirements.txt                      ← Python 依赖清单
+├── .gitignore
 ├── scripts/
 │   └── extract_pdf_pages.py              ← PDF 转 PNG 通用工具
 ├── references/

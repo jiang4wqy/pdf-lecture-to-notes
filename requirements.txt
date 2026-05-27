@@ -1,0 +1,3 @@
+# Runtime dependency for scripts/extract_pdf_pages.py
+# Install with: pip install -r requirements.txt
+pymupdf>=1.23.0
