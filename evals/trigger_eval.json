@@ -1,0 +1,82 @@
+[
+  {
+    "query": "F:\\我的笔记\\123\\大三笔记 下我想给「金融概论」这门课做笔记，PDF 都在 OneDrive 桌面那个文件夹里，能帮我整理成 Obsidian 风格吗？要包括例题和总览",
+    "should_trigger": true
+  },
+  {
+    "query": "桌面上有个「财报分析」的 lecture 文件夹，里面 15 份 PDF，我想做一套带双向链接的 Obsidian 复习笔记，关键图也要截下来",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you build me a study notebook from this folder of lecture slides? I want main notes plus practice questions, all linked together in Obsidian",
+    "should_trigger": true
+  },
+  {
+    "query": "这门课有 8 份 lecture PDF 和一份 sample exam，我想要一套完整复习笔记，主笔记 + 例题 + 模拟卷都要",
+    "should_trigger": true
+  },
+  {
+    "query": "把课件 PDF 都做成笔记呗，重点的图截下来，公式用 LaTeX，能互相跳转",
+    "should_trigger": true
+  },
+  {
+    "query": "I have around 12 lecture PDFs for my econometrics class — can you turn them into linked markdown notes with wiki-style backlinks?",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我把这堆 lecture slides 整理成考试复习用的笔记，关键页面截图，公式列出来，例题分开放",
+    "should_trigger": true
+  },
+  {
+    "query": "Make Obsidian-style study notes from these PDF files in C:/Users/me/Documents/Lectures/. Use bidirectional links between main notes and exercise files.",
+    "should_trigger": true
+  },
+  {
+    "query": "Read this PDF and tell me what's on page 5",
+    "should_trigger": false
+  },
+  {
+    "query": "Extract all the text from invoice.pdf to a .txt file",
+    "should_trigger": false
+  },
+  {
+    "query": "Convert this lecture slide deck (.pptx) into a 2-page handout PDF",
+    "should_trigger": false
+  },
+  {
+    "query": "Merge these three PDFs into one and add page numbers",
+    "should_trigger": false
+  },
+  {
+    "query": "Summarize this 80-page research paper into 3 bullet points",
+    "should_trigger": false
+  },
+  {
+    "query": "Help me write a markdown note explaining what the Black-Scholes equation does",
+    "should_trigger": false
+  },
+  {
+    "query": "OCR these scanned exam papers so I can search them",
+    "should_trigger": false
+  },
+  {
+    "query": "Build me a dashboard showing my course grades over time",
+    "should_trigger": false
+  },
+  {
+    "query": "Take this transcript of a math lecture (already in markdown) and add code examples to each concept",
+    "should_trigger": false
+  },
+  {
+    "query": "Write Anki flashcards for the chapter on Bayesian inference in this PDF",
+    "should_trigger": false
+  },
+  {
+    "query": "Translate this French PDF lecture into English markdown",
+    "should_trigger": false
+  },
+  {
+    "query": "I want a quick one-page cheat sheet for the formulas in chapter 5 of this textbook",
+    "should_trigger": false
+  }
+]

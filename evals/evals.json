@@ -1,0 +1,26 @@
+{
+  "skill_name": "pdf-lecture-to-obsidian",
+  "evals": [
+    {
+      "id": 1,
+      "name": "金融概论-小规模-4PDF",
+      "prompt": "F:\\我的笔记\\123\\大三笔记 下我想新建一个 corporate-finance 文件夹整理「金融概论」课的笔记。源 PDF 在 C:\\Users\\lenovo\\OneDrive\\Desktop\\大三\\金融概论\\，我只想先处理 4 份：2-3 TVM.pdf, 5 Interest Rates.pdf, 6 Valuing Bonds.pdf, 11 Mid-Term Review.pdf。图片放 F:\\我的笔记\\123\\附件\\图片 下。请给我做出完整的 Obsidian 双向链接笔记，包含主笔记 + 例题文件夹 + 总览。",
+      "expected_output": "在 F:\\我的笔记\\123\\大三笔记\\corporate-finance\\ 下生成 4-5 份主笔记 + 4 份例题文件 + 00_总览.md。图片 ~10-15 张存到 F:\\我的笔记\\123\\附件\\图片\\corporate-finance\\。所有 [[]] 链接互通；图片用 ![[]] 嵌入。Mid-term review PDF 用作大纲驱动。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "财报分析-中规模-含sample-exam",
+      "prompt": "我想给「财报分析 企业估值」做完整复习笔记。PDF 在 C:\\Users\\lenovo\\OneDrive\\Desktop\\大三\\财报分析 企业估值\\，包含 sample_midterm.pdf 和 Sample_final.pdf 两份模拟卷。我希望挑重点的 4 份做笔记：3-4 Financial Modelling.pdf、6 DCF Valuation.pdf、14 PE.pdf、15 M&A.pdf。笔记放 F:\\我的笔记\\123\\大三笔记\\valuation\\，例题也要、模拟卷也要。",
+      "expected_output": "在 F:\\我的笔记\\123\\大三笔记\\valuation\\ 下生成 4 份主笔记 + 例题与考点子文件夹（4 份例题 + 99_综合模拟卷.md 整合两份 sample exam）+ 00_总览.md。图片提取到对应附件目录。综合模拟卷的 MCQ 链回主笔记。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "极简-单PDF-快速整理",
+      "prompt": "帮我把 C:\\Users\\lenovo\\OneDrive\\Desktop\\大三\\金融概论\\10 Options.pdf 这一份做成 Obsidian 笔记，放到 F:\\我的笔记\\123\\大三笔记\\quick-notes\\ 下。不需要例题文件夹，就一份主笔记 + 几张关键图就行。",
+      "expected_output": "在 F:\\我的笔记\\123\\大三笔记\\quick-notes\\ 下生成 1 份主笔记（如 01_Options.md）+ 2-5 张图片。不生成例题子文件夹（用户明确说不要）。不生成 00_总览（只有 1 份笔记没必要）。",
+      "files": []
+    }
+  ]
+}
