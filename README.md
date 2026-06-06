@@ -111,6 +111,37 @@ Claude 会先：
 
 ## ⚙️ 工作原理（两段式）
 
+```mermaid
+flowchart TD
+    A(["📁 课件 PDF 文件夹"]) --> B["① 扫描分类 PDF"]
+    subgraph PA["🧩 Part A · 格式无关核心（内容只生成一次）"]
+        direction TB
+        B --> C["② 读大纲 → 提议结构 → 等你确认"]
+        C --> E["③ 提取关键页图片"]
+        E --> F["④ 写结构化 Markdown<br/>（唯一内容源）"]
+    end
+    F --> G{"🔀 选输出格式<br/>两选一"}
+    G ==>|"📒 md"| H["⑤ 插入双向链接"]
+    H --> R1(["📒 Obsidian 笔记库<br/>双向链接 .md"])
+    G ==>|"📄 Word"| J["⑤′ pandoc 转换"]
+    J --> R2(["📄 Word 文档<br/>整门课一份 · 一课一份"])
+
+    classDef src fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#1E1B4B;
+    classDef pick fill:#FEF3C7,stroke:#F59E0B,stroke-width:3px,color:#78350F;
+    classDef obs fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#064E3B;
+    classDef word fill:#EFF6FF,stroke:#3B82F6,stroke-width:1.5px,color:#1E3A8A;
+    classDef io fill:#F5F3FF,stroke:#8B5CF6,stroke-width:1.5px,color:#4C1D95;
+
+    class A io;
+    class B,C,E,F src;
+    class G pick;
+    class H,R1 obs;
+    class J,R2 word;
+    style PA fill:#FAFAFF,stroke:#C7D2FE,stroke-width:1px;
+```
+
+> 🔀 中间那个**黄色分叉**就是核心：同一套内容生成后，你**二选一** —— 出 **📒 Obsidian (.md)** 还是 **📄 Word (.docx)**。
+
 **Part A — 格式无关核心**（无论出哪种格式都跑）：
 
 | Step | 它在干什么 |
