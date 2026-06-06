@@ -3,7 +3,13 @@
 Mid-task reference. When you're deep in writing notes, pull this up to make
 sure you haven't skipped a step.
 
+Structure: **Part A (Phases A–H)** is format-agnostic and always runs — it
+produces the Obsidian-flavored markdown source of truth. **Part B** is one of
+two branches depending on the output target chosen in Phase B.
+
 ---
+
+# PART A — Format-agnostic core
 
 ## Phase A — Discover (~10 min)
 
@@ -21,6 +27,8 @@ sure you haven't skipped a step.
 - [ ] Decide which lectures (if any) should be merged or split
 - [ ] Identify what images deserve extracting (target ~3–8 per PDF)
 - [ ] Confirm output paths (main folder + example sub-folder + image folder)
+- [ ] **Ask output target: Obsidian (default) / Word-combined / Word-per-lecture**
+      → decides which Part B branch to run later
 - [ ] Present plan to user, wait for confirmation
 
 ## Phase C — Extract images (~5 min)
@@ -79,18 +87,39 @@ For each main note:
 
 ## Phase H — Cross-link sweep
 
+(Do this for both targets — it improves the markdown even though Word drops backlinks.)
+
 - [ ] Open every main note; scan for places where another lecture's
       concept appears and add `[[link]]`
 - [ ] Verify every main note links to its example file
 - [ ] Verify every example file links back to its main note
 - [ ] Verify overview file links to everything
 
-## Phase I — Verify and report
+---
+
+# PART B — Format-specific output (run ONE branch)
+
+## Branch Obsidian — Phase I: Verify and report
 
 - [ ] Count main notes, example files, images
 - [ ] Confirm at least one `![[...]]` per main note (where appropriate)
 - [ ] Confirm overview indexes every main note
 - [ ] Report to user with paths, counts, and what to open first
+
+## Branch Word — Phase W1: Build .docx
+
+- [ ] Confirm pandoc is installed (`pandoc --version`); if not, print install
+      hint or fall back to delivering the `.md` only
+- [ ] Run `scripts/build_docx.py` with `--mode combined` or `--mode per-lecture`
+- [ ] Pass `--resource-path <vault-root>` so images resolve
+- [ ] (Optional) pass `--reference reference.docx` for custom styling
+
+## Branch Word — Phase W2: Verify and report
+
+- [ ] Confirm `.docx` file(s) written with non-trivial size
+- [ ] Unzip-check one: images in `word/media/`, no `[[`/`![[` residue, TOC
+      present, formulas as native equations (math courses)
+- [ ] Report to user with output path(s), size, and note that `.md` source is kept
 
 ---
 

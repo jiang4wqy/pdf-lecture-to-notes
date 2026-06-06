@@ -32,6 +32,22 @@
     "should_trigger": true
   },
   {
+    "query": "把「金融概论」这门课的 PDF 课件做成一份 Word 复习册，整门课合成一个 docx，要目录和例题",
+    "should_trigger": true
+  },
+  {
+    "query": "桌面这个 lecture 文件夹，帮我每节课导出一个 Word 文档当复习笔记，公式要能正常显示",
+    "should_trigger": true
+  },
+  {
+    "query": "Turn these lecture slides into a Word document I can print and hand out — one combined .docx for the whole course with a table of contents",
+    "should_trigger": true
+  },
+  {
+    "query": "我有一文件夹课件 PDF，想做成笔记，Word 版或 Obsidian 版都行，你给我个选择",
+    "should_trigger": true
+  },
+  {
     "query": "Read this PDF and tell me what's on page 5",
     "should_trigger": false
   },

@@ -1,4 +1,4 @@
-# pdf-lecture-to-obsidian — 使用指南
+# pdf-lecture-to-notes — 使用指南
 
 > 你已经做出这个 skill 了，那么以后怎么用它？这份文档讲清楚。
 
@@ -6,7 +6,7 @@
 
 ## 一、Skill 在哪里？什么时候自动触发？
 
-**位置**：`C:\Users\lenovo\.claude\skills\pdf-lecture-to-obsidian\`
+**位置**：`C:\Users\lenovo\.claude\skills\pdf-lecture-to-notes\`
 
 Claude Code 启动时自动扫描 `~/.claude/skills/`，把所有 skill 注册到列表里。你打开 Claude Code 就能用，无需任何额外操作。
 
@@ -23,7 +23,7 @@ Claude Code 启动时自动扫描 `~/.claude/skills/`，把所有 skill 注册�
 | "把 invoice.pdf 文字提取出来" | ❌ |
 | "Merge these 3 PDFs into one" | ❌ |
 
-如果该触发但没触发：手动调用 → 在对话里说"**用 pdf-lecture-to-obsidian skill**"。
+如果该触发但没触发：手动调用 → 在对话里说"**用 pdf-lecture-to-notes skill**"。
 
 ---
 
@@ -86,14 +86,41 @@ skill 会：
 
 ---
 
+### 场景 D — 导出 Word 复习册
+
+需要先装 pandoc（见第四节）。两种说法：
+
+**整门课一份 .docx**（封面 + 目录 + 所有讲次 + 例题附录）：
+```
+把 C:\Users\me\Desktop\金融概论\ 做成一份 Word 复习册，
+整门课合成一个 .docx，放到 F:\我的笔记\corporate-finance\ 下。
+```
+
+**一课一份 .docx**：
+```
+「机器学习」这门课，每节课单独导出一个 Word 文件，
+例题作为附录附在每份后面。
+```
+
+skill 会先跑完 Part A（提图 + 写 markdown）+ 交叉链接，再用 `scripts/build_docx.py`
+调 pandoc 转 .docx。**markdown 文件也会保留**（是内容源）。公式自动转 Word 原生公式、
+图片内嵌、生成可点目录。如果你已经有一套 .md 笔记，也可以直接说"把这个文件夹的笔记转成 Word"。
+
+---
+
 ## 三、Skill 的"配置"——你能改什么？
 
 所有可改项都在 `SKILL.md` 里。常见的修改：
 
 ### 改默认输出风格
 找到 `## Default decisions baked into this skill` 那张表，改对应行。例如：
+- 默认出 Obsidian 还是 Word → 改 "Output target" 行
 - 想要纯 Markdown（不要 Obsidian wiki-link）→ 改 "Output format" 行
 - 永远生成例题文件夹（不再问）→ 改 "例题与考点 sub-folder" 行为 "Always generate"
+
+### 改 Word 输出
+- 字体/标题样式：生成 `reference.docx` 传 `--reference`（见 `references/word_output_guide.md`）
+- callout 标签文字（【信息】【注意】…）：改 `scripts/build_docx.py` 的 `CALLOUT_LABELS`
 
 ### 改图片提取的"智能选页"逻辑
 不直接在 skill 里写规则，而是在 prompt 里加约束。例如：
@@ -114,6 +141,9 @@ Skill 需要本机有：
 |------|------|---------|
 | Python ≥ 3.8 | 跑 extract_pdf_pages.py | `python --version` |
 | PyMuPDF (fitz) | PDF 渲染为图片 | `python -c "import fitz; print(fitz.__doc__[:50])"` |
+| pandoc（仅 Word 输出） | markdown→.docx | `pandoc --version` |
+
+> pandoc 不是 pip 包，单独装：`winget install --id JohnMacFarlane.Pandoc`（Win）/ `brew install pandoc`（mac）/ `sudo apt install pandoc`（Linux）。只用 Obsidian 输出可以不装。`build_docx.py` 没检测到 pandoc 会打印安装提示并退出。
 
 如果 PyMuPDF 没装，二选一：
 
@@ -132,8 +162,8 @@ skill 内部已经写了 fallback：如果 PyMuPDF 不可用，会跳过图片�
 ## 五、常见问题排查
 
 ### Q1. Skill 没触发怎么办？
-- 检查 `~/.claude/skills/pdf-lecture-to-obsidian/SKILL.md` 是否存在
-- 在对话里**直接说**："请用 pdf-lecture-to-obsidian skill 处理 …"
+- 检查 `~/.claude/skills/pdf-lecture-to-notes/SKILL.md` 是否存在
+- 在对话里**直接说**："请用 pdf-lecture-to-notes skill 处理 …"
 - 或在新会话开始时直接点 `/skills` 看 skill 是否在列表里
 
 ### Q2. 中文路径报错？
@@ -159,12 +189,12 @@ SKILL.md 里已经强调过：路径包含非 ASCII 字符时优先用 Read/Writ
 
 ### 反馈循环
 1. 用过一次 → 记下不满意的地方（比如"例题太少"、"公式没加引用"）
-2. 在新会话里说："改一下 pdf-lecture-to-obsidian skill — XXX 不好"
+2. 在新会话里说："改一下 pdf-lecture-to-notes skill — XXX 不好"
 3. Claude 会用 skill-creator 调用它来改 SKILL.md / 模板
 
 ### 如果想正式迭代（带量化评估）
 ```
-跑一下 pdf-lecture-to-obsidian skill 的评估，
+跑一下 pdf-lecture-to-notes skill 的评估，
 之前的测试我看后留 feedback 在 feedback.json 里
 ```
 
@@ -174,7 +204,7 @@ Claude 会用 `skill-creator` 工作流跑下一轮 with-skill vs without-skill 
 
 ## 七、如何分享给别人
 
-这个 skill 已经发布在 GitHub：**https://github.com/jiang4wqy/pdf-lecture-to-obsidian**
+这个 skill 已经发布在 GitHub：**https://github.com/jiang4wqy/pdf-lecture-to-notes**
 
 最简单的方式是把 README 链接发给对方，里面有现成的安装命令。下面是三种分发方式的对比：
 
@@ -184,20 +214,20 @@ Claude 会用 `skill-creator` 工作流跑下一轮 with-skill vs without-skill 
 ```powershell
 # Windows
 cd $env:USERPROFILE\.claude\skills
-git clone https://github.com/jiang4wqy/pdf-lecture-to-obsidian.git
-pip install -r pdf-lecture-to-obsidian\requirements.txt
+git clone https://github.com/jiang4wqy/pdf-lecture-to-notes.git
+pip install -r pdf-lecture-to-notes\requirements.txt
 ```
 ```bash
 # macOS / Linux
 cd ~/.claude/skills
-git clone https://github.com/jiang4wqy/pdf-lecture-to-obsidian.git
-pip install -r pdf-lecture-to-obsidian/requirements.txt
+git clone https://github.com/jiang4wqy/pdf-lecture-to-notes.git
+pip install -r pdf-lecture-to-notes/requirements.txt
 ```
 优点：以后你 `git push` 更新，对方 `git pull` 就能同步。
 
 ### 方法 B — 打包成 zip 直接发
 
-适合对方不会用 git 的情况。压缩整个 `pdf-lecture-to-obsidian/` 文件夹，对方解压到自己的 `~/.claude/skills/` 即可。注意提醒对方还要 `pip install pymupdf`。
+适合对方不会用 git 的情况。压缩整个 `pdf-lecture-to-notes/` 文件夹，对方解压到自己的 `~/.claude/skills/` 即可。注意提醒对方还要 `pip install pymupdf`（要导 Word 还需装 pandoc）。
 
 ### 方法 C — 打包成 `.skill` 文件（最正式）
 
@@ -207,7 +237,7 @@ pip install -r pdf-lecture-to-obsidian/requirements.txt
 
 在本地改完后：
 ```powershell
-cd $env:USERPROFILE\.claude\skills\pdf-lecture-to-obsidian
+cd $env:USERPROFILE\.claude\skills\pdf-lecture-to-notes
 git add .
 git commit -m "describe your change"
 git push
@@ -218,7 +248,7 @@ git push
 ## 八、Skill 文件清单（供你心里有数）
 
 ```
-pdf-lecture-to-obsidian/
+pdf-lecture-to-notes/
 ├── SKILL.md                              ← skill 主文件，Claude 自动读取（描述 + 工作流）
 ├── USAGE.md                              ← 本文件（给最终用户看的使用指南）
 ├── README.md                             ← GitHub 主页展示，含安装步骤
@@ -226,13 +256,15 @@ pdf-lecture-to-obsidian/
 ├── requirements.txt                      ← Python 依赖清单
 ├── .gitignore
 ├── scripts/
-│   └── extract_pdf_pages.py              ← PDF 转 PNG 通用工具
+│   ├── extract_pdf_pages.py              ← PDF 转 PNG 通用工具
+│   └── build_docx.py                     ← markdown→Word(.docx) 转换器（pandoc 包装）
 ├── references/
 │   ├── main_note_template.md             ← 主笔记模板
 │   ├── example_template.md               ← 例题文件模板
 │   ├── overview_template.md              ← 总览文件模板
 │   ├── mock_exam_template.md             ← 模拟卷模板
-│   └── workflow_checklist.md             ← 工作流速查
+│   ├── workflow_checklist.md             ← 工作流速查
+│   └── word_output_guide.md             ← Word 分支细节（pandoc 用法、语法转换、样式）
 └── evals/
     ├── evals.json                        ← 行为测试用例
     └── trigger_eval.json                 ← 描述/触发测试用例
@@ -243,6 +275,8 @@ pdf-lecture-to-obsidian/
 ---
 
 ## 九、未来扩展的想法（仅作记录，不必现在做）
+
+> ✅ 已完成：**Word(.docx) 输出**（pandoc，整门课一份 / 一课一份）。
 
 | 想法 | 难度 |
 |------|------|

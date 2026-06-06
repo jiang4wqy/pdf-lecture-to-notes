@@ -1,3 +1,9 @@
-# Runtime dependency for scripts/extract_pdf_pages.py
+# Python runtime dependency for scripts/extract_pdf_pages.py
 # Install with: pip install -r requirements.txt
 pymupdf>=1.23.0
+
+# NOTE: The Word (.docx) output also needs `pandoc`, which is NOT a pip package.
+# Install it separately (see README "前置依赖"):
+#   Windows: winget install --id JohnMacFarlane.Pandoc
+#   macOS:   brew install pandoc
+#   Linux:   sudo apt install pandoc

@@ -1,5 +1,5 @@
 {
-  "skill_name": "pdf-lecture-to-obsidian",
+  "skill_name": "pdf-lecture-to-notes",
   "evals": [
     {
       "id": 1,
@@ -20,6 +20,13 @@
       "name": "极简-单PDF-快速整理",
       "prompt": "帮我把 C:\\Users\\lenovo\\OneDrive\\Desktop\\大三\\金融概论\\10 Options.pdf 这一份做成 Obsidian 笔记，放到 F:\\我的笔记\\123\\大三笔记\\quick-notes\\ 下。不需要例题文件夹，就一份主笔记 + 几张关键图就行。",
       "expected_output": "在 F:\\我的笔记\\123\\大三笔记\\quick-notes\\ 下生成 1 份主笔记（如 01_Options.md）+ 2-5 张图片。不生成例题子文件夹（用户明确说不要）。不生成 00_总览（只有 1 份笔记没必要）。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "金融概论-Word整门课一份",
+      "prompt": "把 C:\\Users\\lenovo\\OneDrive\\Desktop\\大三\\金融概论\\ 这门课做成一份 Word 复习册（整门课合成一个 .docx），放到 F:\\我的笔记\\123\\大三笔记\\corporate-finance\\ 下。要封面、目录、例题作附录。",
+      "expected_output": "先按 Part A 生成 Obsidian 风格 .md（主笔记 + 例题 + 总览）+ 提取图片；然后在 Step 2.5 确认输出目标为 Word-combined；最后调用 scripts/build_docx.py --mode combined 用 pandoc 生成单个 .docx（含 TOC、内嵌图片、公式转 Word 原生公式、[[]]/![[]] 无残留）。.md 源文件保留。若本机无 pandoc，给出安装提示而非报错。",
       "files": []
     }
   ]

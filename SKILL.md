@@ -1,14 +1,16 @@
 ---
-name: pdf-lecture-to-obsidian
+name: pdf-lecture-to-notes
 description: |
-  Build a complete Obsidian-style study notebook from a folder of lecture PDFs (or a single PDF). The user supplies an input folder (lecture slides, exam reviews, practice papers) and an output folder; this skill produces a structured set of linked .md notes — one main note per lecture, an index/overview, an "examples & exam questions" sub-folder with bidirectional `[[wiki-links]]`, and key page images extracted to a sibling attachments folder. Use whenever the user wants to: "整理 PDF 笔记", "把课件做成笔记", "make Obsidian notes from these slides", "build a study notebook", "为我做笔记", "课程复习笔记", "把这些 lecture 做成笔记", "PDF to markdown notes for studying", or supplies a folder full of lecture PDFs and wants organized notes. Trigger even if the user just says "笔记" + mentions a folder of PDFs/slides — they almost certainly want this workflow rather than a single-file conversion.
+  Build a complete study notebook from a folder of lecture PDFs (or a single PDF), in the user's choice of output format: Obsidian-style linked markdown OR a Word (.docx) document. The user supplies an input folder (lecture slides, exam reviews, practice papers) and an output folder; this skill produces a structured set of notes — one main note per lecture, an index/overview, an "examples & exam questions" set, and key page images extracted from the PDFs. Obsidian output uses bidirectional `[[wiki-links]]`; Word output is rendered via pandoc (one combined .docx per course, or one per lecture). Use whenever the user wants to: "整理 PDF 笔记", "把课件做成笔记", "做成 Word 笔记", "导出 docx 复习册", "make Obsidian notes from these slides", "turn these slides into a Word document", "build a study notebook", "为我做笔记", "课程复习笔记", "把这些 lecture 做成笔记", "PDF to markdown/Word notes for studying", or supplies a folder full of lecture PDFs and wants organized notes. Trigger even if the user just says "笔记" + mentions a folder of PDFs/slides — they almost certainly want this workflow rather than a single-file conversion.
 ---
 
-# PDF Lectures → Obsidian Study Notebook
+# PDF Lectures → Study Notebook (Obsidian or Word)
 
-> Turn a folder of lecture PDFs into a structured, linked, exam-ready notebook in the user's Obsidian-style vault.
+> Turn a folder of lecture PDFs into a structured, exam-ready notebook — as an Obsidian-style linked vault, or as a Word (.docx) document. Same content engine, two output formats.
 
 ## What this skill produces
+
+The artifacts below describe the **Obsidian** output (the default and the content source of truth). For **Word** output, the same content is rendered to one or more `.docx` files via pandoc (see Step 2.5 and the Word output section) — the `.md` files are still produced and kept.
 
 Given an input folder of lecture PDFs and an output folder, produce:
 
@@ -32,7 +34,8 @@ These were chosen by the user when the skill was created. Override only if the u
 
 | Decision | Default |
 |---|---|
-| Output format | **Obsidian wiki-link style** — `[[file]]`, `![[image.png]]`, callouts `>[!info]`, `>[!warning]`, math `$...$` / `$$...$$` |
+| **Output target** | **Obsidian (default)**. Alternatives: `Word-combined` (one .docx for the whole course) or `Word-per-lecture` (one .docx per note). Ask at runtime — see Step 2.5. |
+| Output format | **Obsidian wiki-link style** — `[[file]]`, `![[image.png]]`, callouts `>[!info]`, `>[!warning]`, math `$...$` / `$$...$$`. This is always the **single source of truth**; Word is generated from it via pandoc. |
 | Image extraction | **Smart page selection** — scan the PDF, pick pages with formulas/diagrams/flowcharts/comparison tables; render at zoom=2.0 (≈144 DPI) PNG via PyMuPDF |
 | `例题与考点/` sub-folder | **Ask at runtime** — propose generating it; if user agrees, produce one example file per main note plus a mock-exam file if a practice PDF exists |
 | Language | Match the input/output path naming. Chinese path components → Chinese explanations + English key terms. English path → all English. |
@@ -40,7 +43,16 @@ These were chosen by the user when the skill was created. Override only if the u
 
 ## High-level workflow
 
-Follow these steps in order. Don't skip the planning step — it prevents wasted work when the user's vault has surprises.
+The workflow has **two parts**:
+
+- **Part A — Format-agnostic core** (always runs): discover → plan → choose format → extract images → write the structured markdown. This produces the single source of truth regardless of output target.
+- **Part B — Format-specific output** (branches on the choice in Step 2.5): either finish as an **Obsidian** vault (cross-link + verify) or render to **Word** via pandoc.
+
+Follow the steps in order. Don't skip the planning step — it prevents wasted work when the user's vault has surprises.
+
+---
+
+## Part A — Format-agnostic core
 
 ### Step 1 — Discover
 
@@ -64,6 +76,18 @@ Present the user with a concrete plan before writing anything:
 
 Wait for the user to confirm or adjust before extracting images or writing files. If they want changes, revise the plan.
 
+### Step 2.5 — Choose output target
+
+Ask which format the user wants (default **Obsidian** if they don't care):
+
+| Choice | What they get | When |
+|---|---|---|
+| **Obsidian** (default) | linked `.md` vault with `[[]]` backlinks, `![[]]` embeds, callouts | they use Obsidian / want a living knowledge base |
+| **Word — combined** | one `.docx` for the whole course (封面/TOC + all lectures + 例题附录) | printing / emailing one 复习册 / submitting a deliverable |
+| **Word — per-lecture** | one `.docx` per lecture (例题 folded in as appendix) | sharing individual lectures |
+
+This choice **only affects Part B**. Part A (Steps 3–4) is identical either way — you always write Obsidian-flavored markdown first. For Word, that markdown is converted by pandoc at the end. So even a Word user gets the `.md` files too (kept as the source of truth).
+
 ### Step 3 — Extract images
 
 Run `scripts/extract_pdf_pages.py` (see below) to render selected PDF pages as PNG.
@@ -85,17 +109,53 @@ These templates are scaffolds, not rigid forms. Adapt section headings to the le
 - A "易错点" section
 - Cross-links to related notes via `[[]]`
 
-### Step 5 — Cross-link
+---
+
+## Part B — Format-specific output
+
+Run **one** branch based on Step 2.5.
+
+### Branch B-Obsidian (default)
+
+#### Step 5 — Cross-link
 
 After all main notes exist, go back and add `[[other_note]]` links inline wherever one lecture's concepts are used in another. Also link main notes ↔ example files in both directions (Obsidian renders backlinks automatically, but explicit links help).
 
-### Step 6 — Verify
+#### Step 6 — Verify (Obsidian)
 
 1. List final files and image count
 2. Confirm at least one main note has an image embedded via `![[...]]`
 3. Confirm at least one main note links to its example file via `[[例题与考点/...]]`
 4. Confirm `00_总览.md` indexes every main note
 5. Report to the user with: total file count, total line count, image count, paths to inspect
+
+### Branch B-Word
+
+The `.md` files from Part A are the source of truth. Do the Obsidian cross-link pass (Step 5) **first** — it improves the markdown even though Word drops backlinks — then convert.
+
+#### Step 5′ — Render .docx
+
+Run `scripts/build_docx.py` (a pandoc wrapper — see the **Word output** section and `references/word_output_guide.md`):
+
+```bash
+# combined (one .docx for the whole course)
+python scripts/build_docx.py --src "<notes-folder>" --mode combined \
+    --out "<notes-folder>/复习册.docx" --resource-path "<vault-root>"
+
+# per-lecture (one .docx per note; --out is a directory)
+python scripts/build_docx.py --src "<notes-folder>" --mode per-lecture \
+    --out "<notes-folder>/word" --resource-path "<vault-root>"
+```
+
+Pass `--resource-path` = the base that image paths are relative to (vault root for the `附件/图片/...` scheme; the course folder for the `images/...` scheme). The script defaults to searching `--src` plus parents, but pass it explicitly when you know it.
+
+If pandoc isn't installed, the script prints an install hint and exits. Tell the user, and either help them install pandoc or fall back to delivering the Obsidian markdown only.
+
+#### Step 6′ — Verify (Word)
+
+1. Confirm the `.docx` file(s) were written and have non-trivial size
+2. Open or unzip one and confirm: images embedded (`word/media/`), no `[[` / `![[` residue, TOC present, formulas rendered as native equations (for math courses)
+3. Report to the user with: output path(s), file size, and a note that the `.md` source is also kept
 
 ## When to use `scripts/extract_pdf_pages.py`
 
@@ -110,6 +170,23 @@ python scripts/extract_pdf_pages.py --spec <path-to-spec.json> --src <input-fold
 The `spec.json` shape is documented in the script's docstring. Generate it programmatically based on the PDFs you've read — Claude picks the relevant page numbers based on what was on each page (formulas, flowcharts, comparison tables, key diagrams).
 
 If you need to render a quick one-off page outside the structured spec, you can run a small inline Python snippet using PyMuPDF directly — the script is just a convenience for batch jobs.
+
+## Word output (Branch B-Word)
+
+The Word path **reuses the Obsidian markdown** — there is no separate Word template. `scripts/build_docx.py` normalizes the Obsidian flavor and calls pandoc:
+
+- `![[img]]` → `![](img)` (pandoc embeds the image)
+- `[[wiki-link]]` → plain text (Word has no backlinks)
+- `> [!info] X` → `> **【信息】X**` (callout → bold Chinese label)
+- `$...$` / `$$...$$` → **native Word equations (OMML)**, pipe tables → Word tables, headings → TOC — all handled by pandoc
+
+**Dependency:** pandoc (NOT pip). `winget install --id JohnMacFarlane.Pandoc` / `brew install pandoc` / `apt install pandoc`. The script checks for it and prints this hint if missing.
+
+**Granularity:** `--mode combined` (one .docx) or `--mode per-lecture` (one per note). See Step 5′ above.
+
+**Styling (optional):** generate an editable `reference.docx` and pass `--reference` for a custom house style.
+
+Full details — conversion table, image `--resource-path` resolution, styling, verification snippet — are in **`references/word_output_guide.md`**. Read it before running the Word branch.
 
 ## Common pitfalls (avoid these)
 
@@ -187,5 +264,6 @@ When invoked, work through this list:
 - `references/overview_template.md` — `00_总览.md` scaffold
 - `references/mock_exam_template.md` — comprehensive mock exam scaffold
 - `references/workflow_checklist.md` — step-by-step checklist (handy mid-task)
+- `references/word_output_guide.md` — Word (.docx) branch: pandoc usage, syntax conversion, styling, verification
 
 Read these on demand as you need them; don't try to memorize them all upfront.
